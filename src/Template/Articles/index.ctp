@@ -9,6 +9,7 @@
         <th>Authors</th>
         <th>Created</th>
         <th>Action</th>
+        <th>Tag</th>
     </tr>
 
     <!-- Here is where we iterate through our $articles query object, printing out article info -->
@@ -16,7 +17,6 @@
     <?php foreach ($articles as $article): ?>
     <tr>
         <td><?= $article->id ?></td>
-        
         <td>
             
             <?= $this->Html->link($article->title, ['action' => 'view', $article->id]) ?>
@@ -26,8 +26,6 @@
             <?= $article->author->username?>
         </td>
 
-      
-        
         <td>
             <?= $article->created->format(DATE_RFC850) ?>
         </td>
@@ -39,6 +37,10 @@
             ?>
             <?= $this->Html->link('Edit', ['action' => 'edit', $article->id]) ?>
         </td>
+        <td>
+             <?= $article->tag->name?>
+        </td>
+        
     </tr>
     <?php endforeach; ?>
 </table>

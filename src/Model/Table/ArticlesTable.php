@@ -29,9 +29,16 @@ class ArticlesTable extends Table
             'className'=>'Users',
             'foreignKey'=>'user_id'// in articles table
             ]);
+
+            $this ->belongsTo('Tags'); 
+            $this->belongsTo('Tags', [
+            'className'=>'Tags',
+            'foreignKey'=>'id'// in comment table
+            ]);
         
             $this->hasMany('Comments', [
-            'className'=>'Comments'           
+            'className'=>'Comments',
+            'foreignKey' => 'article_id'           
             ]);
             //commnet association
             // $this->hasMany('Comments', [
@@ -40,7 +47,9 @@ class ArticlesTable extends Table
             // 'dependent' => true,
             // 'conditions' => ['approved' => true]
             // ]);
-              $this->hasMany('UnapprovedComments', [
+
+
+            $this->hasMany('UnapprovedComments', [
             'className' => 'Comments',
             'foreignKey' => 'article_id',
             'dependent' => true,

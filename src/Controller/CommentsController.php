@@ -61,7 +61,7 @@ class CommentsController extends AppController
             //debug($id);                                                                                                       
             //$this->Orders->save($order);
             //debug($comment);
-            $comment->article_id = $articlesID;
+            $comment->article_id = 1;
             $comment->approved = false;
             
             $comment->user_id = $this->Auth->user('id'); 

@@ -25,7 +25,7 @@ class ArticlesController extends AppController
      */
    public function index()
     {
-        $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments']));
+        $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
         
     }
     /**
