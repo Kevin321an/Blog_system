@@ -1,6 +1,5 @@
 <!-- File: src/Template/Articles/add.ctp -->
-
-
+<?= debug($art_id) ?>
 <h1>Add comment</h1>
 <?php
   	

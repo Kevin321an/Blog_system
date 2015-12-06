@@ -38,7 +38,7 @@
             <?= $this->Html->link('Edit', ['action' => 'edit', $article->id]) ?>
         </td>
         <td>
-             <?= $article->tag->name?>
+            <?= $this->Html->link($article->tag->name, ['action' => 'viewByTag', $article->tag->name]) ?>          
         </td>
         
     </tr>

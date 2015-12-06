@@ -1,7 +1,7 @@
 <!-- File: src/Template/Articles/view.ctp -->
 
 <h1><?= h($article->title) ?></h1>
-<h1><?= debug($article->id) ?></h1>
+
 <p><?= $this->Html->link(
     'Add Comment', 
     //array('controller' => 'Comments', 'action' => 'add' , $article->id))    

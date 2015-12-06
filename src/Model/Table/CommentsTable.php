@@ -34,8 +34,7 @@ class CommentsTable extends Table
         $this->table('comments');
         $this->displayField('body');
         $this->primaryKey('id');        
-        $this->addBehavior('Timestamp');
-        
+        $this->addBehavior('Timestamp');       
     
     }
 

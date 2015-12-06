@@ -18,6 +18,21 @@ class ArticlesController extends AppController
         $this->loadComponent('Flash'); // Include the FlashComponent
     }
 
+     public function viewByTag($tag = null ){
+             
+        $this->set('tagName', $tag);
+        $this->set('_serialize', ['tagName']);  
+
+        $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
+        $query = $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags'])
+            -> where (['name' => $tag]);
+
+        $this->set('query', $query);
+        $this->set('_serialize', ['query']);      
+
+
+    }
+
     /**
      * Index method
      *

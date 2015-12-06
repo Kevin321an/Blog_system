@@ -2,6 +2,7 @@
 <?= $this->Html->link('Add Comment', ['action' => 'add']) ?>
 
 
+
 <h1>Add Article</h1>
 <?php
     echo $this->Form->create($article);

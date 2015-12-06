@@ -30,8 +30,7 @@ class UsersTable extends Table
             'conditions' => ['Complete' => '1']
             ]);
         
-        $this-> hasMany('orders');      */
-            
+        $this-> hasMany('orders');      */           
 
     }
     

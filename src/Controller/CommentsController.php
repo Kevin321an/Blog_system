@@ -46,22 +46,23 @@ class CommentsController extends AppController
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
+    
     public function add($id = null)
     {
          
-         $articlesID = $id;
-         $this->Flash->error(__("this article id is" +$articlesID));
+        $articlesID = $id;        
+        $this->set('art_id', $articlesID);
+        $this->set('_serialize', ['art_id']);  
          //debug($comments);
         $comment = $this->Comments->newEntity();
         if ($this->request->is('post')) {
-            $comment = $this->Comments->patchEntity($comment, $this->request->data);
-            
+            $comment = $this->Comments->patchEntity($comment, $this->request->data);            
             //$comment->article_id = 3;
             //$this->Flash->error(__($articlesID));
             //debug($id);                                                                                                       
             //$this->Orders->save($order);
             //debug($comment);
-            $comment->article_id = 1;
+            $comment->article_id = $art_id;
             $comment->approved = false;
             
             $comment->user_id = $this->Auth->user('id'); 

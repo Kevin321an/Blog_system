@@ -48,7 +48,6 @@ class ArticlesTable extends Table
             // 'conditions' => ['approved' => true]
             // ]);
 
-
             $this->hasMany('UnapprovedComments', [
             'className' => 'Comments',
             'foreignKey' => 'article_id',
