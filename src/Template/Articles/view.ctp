@@ -1,27 +1,29 @@
 <!-- File: src/Template/Articles/view.ctp -->
 
 <h1><?= h($article->title) ?></h1>
-
-<p><?= $this->Html->link('Add Comment', ['action' => 'add', 'controller' => 'comments',$article->id]) ?></p>
+<h1><?= debug($article->id) ?></h1>
+<p><?= $this->Html->link(
+    'Add Comment', 
+    //array('controller' => 'Comments', 'action' => 'add' , $article->id))    
+    ['action' => 'add', 'controller' => 'comments', $article->id]) 
+?></p>
 <p><?= h($article->body) ?></p>
 <p><small>Created: <?= $article->created->format(DATE_RFC850) ?></small></p>
 <table>
-    <tr>
-        
+    <tr>        
         <th>Comment</th>
-        
         <th>Created</th>
         <th>Approved</th>
-       
+        <th>Action</th>
     </tr>
 
     <!-- Here is where we iterate through our $articles query object, printing out article info -->
-        <!--    php foreach ($articles->comments as $comment): -->
+   
     <?php 
     //$query = $article->find('all')->contain(['Comments']);
     $comments = $article->comments;
-    debug($article); 
-    debug($comments);
+    //debug($article); 
+    //debug($comments);
     //debug($comments);
 	foreach ($comments as $comment): /*{
     echo $article->comments[0]->text;
@@ -33,6 +35,17 @@
         </td>
         <td>
             <?= $comment->approved ?>
+        </td>
+        <td>
+             <?= $this->Form->postLink(
+                'Delete',
+                ['action' => 'delete', 'controller' => 'comments', $comment->id],
+                ['confirm' => 'Are you sure?'])
+            ?>
+             <?= $this->Form->postLink(
+                'Approve',
+                ['action' => 'approveComment', 'controller' => 'comments', $comment->id])
+            ?>
         </td>
 
     </tr>

@@ -48,26 +48,51 @@ class CommentsController extends AppController
      */
     public function add($id = null)
     {
+         
+         $articlesID = $id;
+         $this->Flash->error(__("this article id is" +$articlesID));
+         //debug($comments);
         $comment = $this->Comments->newEntity();
         if ($this->request->is('post')) {
             $comment = $this->Comments->patchEntity($comment, $this->request->data);
             
-            //$comment->article_id = $article;
-            //$comment->approved= f;
+            //$comment->article_id = 3;
+            //$this->Flash->error(__($articlesID));
+            //debug($id);                                                                                                       
             //$this->Orders->save($order);
-
+            //debug($comment);
+            $comment->article_id = $articlesID;
             $comment->approved = false;
-            $comment->user_id = $this->Auth->user('id'); //
+            
+            $comment->user_id = $this->Auth->user('id'); 
             if ($this->Comments->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
                 return $this->redirect(['action' => 'index','controller' => 'articles']);
             } else {
                 $this->Flash->error(__('The comment could not be saved. Please, try again.'));
-            }
-        }
+             }
+         }
         //$articles = $this->Comments->Articles->find('list', ['limit' => 200]);
         $this->set(compact('comment'));
         $this->set('_serialize', ['comment']);
+    }
+
+      public function approveComment($id = null)
+    {
+
+
+        $comment = $this->Comments->get($id, [
+            'contain' => []
+        ]);
+        debug ($comment);
+        
+        //$order = $this->Orders->get($id); 
+        $comment->approved= 1;
+        $this->Comments->save($comment);
+      
+                $this->Flash->success(__('The order has been completed.'));
+                return $this->redirect(['action' => 'index','controller' => 'Articles']);
+   
     }
 
     /**
@@ -105,14 +130,16 @@ class CommentsController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function delete($id = null)
-    {
+    {   
+        $this->Flash->success(__($id));
         $this->request->allowMethod(['post', 'delete']);
-        $comment = $this->Comment->get($id);
-        if ($this->Comment->delete($comment)) {
+        $comment = $this->Comments->get($id);
+        if ($this->Comments->delete($comment)) {
             $this->Flash->success(__('The comment has been deleted.'));
-        } else {
+        } else {    
             $this->Flash->error(__('The comment could not be deleted. Please, try again.'));
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect(['action' => 'index','controller' => 'articles']);
+        //'action' => 'delete', 'controller' => 'comments'
     }
 }

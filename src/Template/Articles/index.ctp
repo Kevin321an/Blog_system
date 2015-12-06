@@ -7,7 +7,6 @@
         <th>Id</th>
         <th>Title</th>
         <th>Authors</th>
-        
         <th>Created</th>
         <th>Action</th>
     </tr>

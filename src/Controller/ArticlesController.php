@@ -38,6 +38,7 @@ class ArticlesController extends AppController
    public function view($id)
     {
         $article = $this->Articles->get($id);
+        //get the comments by current ID
         $article = $this->Articles->get($id,[
             'contain' => ['Comments']
         ]);
