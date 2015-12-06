@@ -56,15 +56,14 @@ class CommentsController extends AppController
          //debug($comments);
         $comment = $this->Comments->newEntity();
         if ($this->request->is('post')) {
-            $comment = $this->Comments->patchEntity($comment, $this->request->data);            
-            //$comment->article_id = 3;
-            //$this->Flash->error(__($articlesID));
-            //debug($id);                                                                                                       
-            //$this->Orders->save($order);
-            //debug($comment);
-            $comment->article_id = $art_id;
-            $comment->approved = false;
-            
+            $comment = $this->Comments->patchEntity($comment, $this->request->data); 
+
+            //Here is a bug that the $id can not pass into  this curly brace          
+            $id = rand(1,10);            
+            $comment->article_id = $id;
+           /* $newData = ['article_id' => $id];
+            $comment = $this->Articles->patchEntity($comment, $newData);*/
+            $comment->approved = false;            
             $comment->user_id = $this->Auth->user('id'); 
             if ($this->Comments->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
@@ -91,10 +90,26 @@ class CommentsController extends AppController
         $comment->approved= 1;
         $this->Comments->save($comment);
       
-                $this->Flash->success(__('The order has been completed.'));
+                $this->Flash->success(__('The comment has been approved.'));
                 return $this->redirect(['action' => 'index','controller' => 'Articles']);
    
     }
+
+    public function dComment($id = null)
+    {
+        $comment = $this->Comments->get($id, [
+            'contain' => []
+        ]);       
+        
+        //$order = $this->Orders->get($id); 
+        $comment->approved= 0;
+        $this->Comments->save($comment);
+      
+                $this->Flash->success(__('The comment has been disapproved.'));
+                return $this->redirect(['action' => 'index','controller' => 'Articles']);
+   
+    }
+
 
     /**
      * Edit method

@@ -38,7 +38,9 @@ class ArticlesTable extends Table
         
             $this->hasMany('Comments', [
             'className'=>'Comments',
-            'foreignKey' => 'article_id'           
+            'foreignKey' => 'article_id'
+            //'conditions' => ['approved' => true] 
+                     
             ]);
             //commnet association
             // $this->hasMany('Comments', [
@@ -48,12 +50,12 @@ class ArticlesTable extends Table
             // 'conditions' => ['approved' => true]
             // ]);
 
-            $this->hasMany('UnapprovedComments', [
+            $this->hasMany('approvedComments', [
             'className' => 'Comments',
             'foreignKey' => 'article_id',
-            'dependent' => true,
-            'conditions' => ['approved' => false],
-            'propertyName' => 'unapproved_comments'
+            'conditions' => ['approved' => true] ,
+            'propertyName' => 'allComments'
+            //'dependent' => true,             
             ]);
         
         

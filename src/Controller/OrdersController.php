@@ -45,11 +45,7 @@ class OrdersController extends AppController
         // Converting the query to an array will execute it.
         $results = $query->toArray();*/
         $CompleteOrders = $this->Orders->find('all')
-            -> where (['complete' => '1']);
-        
-        
-         
-        
+            -> where (['complete' => '1']);        
          $this->set('CompleteOrders', $CompleteOrders);
          $this->set('_serialize', ['$CompleteOrders']);
     }

@@ -20,15 +20,10 @@
     <!-- Here is where we iterate through our $articles query object, printing out article info -->
    
     <?php 
-    //$query = $article->find('all')->contain(['Comments']);
+  
     $comments = $article->comments;
-    //debug($article); 
-    //debug($comments);
-    //debug($comments);
-	foreach ($comments as $comment): /*{
-    echo $article->comments[0]->text;
-    foreach ($articles as $article):*/ ?>
-    <tr>
+	foreach ($comments as $comment): ?>
+    <tr>        
         <td><?= $comment->body ?></td>              
         <td>
             <?= $comment->created ?>
@@ -45,6 +40,10 @@
              <?= $this->Form->postLink(
                 'Approve',
                 ['action' => 'approveComment', 'controller' => 'comments', $comment->id])
+            ?>
+            <?= $this->Form->postLink(
+                'Disapprove',
+                ['action' => 'dComment', 'controller' => 'comments', $comment->id])
             ?>
         </td>
 

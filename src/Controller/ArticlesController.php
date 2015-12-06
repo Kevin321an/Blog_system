@@ -26,13 +26,9 @@ class ArticlesController extends AppController
         $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
         $query = $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags'])
             -> where (['name' => $tag]);
-
         $this->set('query', $query);
-        $this->set('_serialize', ['query']);      
-
-
+        $this->set('_serialize', ['query']);     
     }
-
     /**
      * Index method
      *
@@ -51,14 +47,36 @@ class ArticlesController extends AppController
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
    public function view($id)
-    {
-        $article = $this->Articles->get($id);
-        //get the comments by current ID
-        $article = $this->Articles->get($id,[
-            'contain' => ['Comments']
-        ]);
 
-        //$article->find('all')->contain(['Comments'])
+    {
+
+        //Check the authentication: only admit can access unproved comments
+        $user = $this->Auth->user();
+        if (parent::isAuthorized($user)) {                
+                $article = $this->Articles->get($id,[
+                    'contain' => ['Comments']
+                ]);
+            }
+            else{
+                $article = $this->Articles->get($id,[
+                    'contain' => ['Comments' => function($query){
+                        return $query
+                        ->where(['approved' => 1]);
+                    }]
+                ]);              
+       
+               /* $query = $article
+                    ->find()                
+                    ->where(['approved' => 1]);
+                    */
+
+                // $article = $this->Articles->get($id);
+                //  $article = $this->Articles->get($id,[
+                //     'contain' => ['Comments'] =>where(['approved' => 1]) 
+                // ]);               
+
+            }
+       
         $this->set(compact('article'));
     }
     /**
@@ -66,14 +84,28 @@ class ArticlesController extends AppController
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-     public function add()
+     public function add( $id = null)
     {
         $article = $this->Articles->newEntity();
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->data);
             //The user() function provided by the component returns any column from the currently logged in user. We used this method to add the data                       into the request info that is saved.
             $article->user_id = $this->Auth->user('id');
-            
+
+            $data = [
+                'user_id' => $this->Auth->user('id'),
+                'tag' => [
+                    'id' => $id,
+                    'name' => 'game'
+                ]
+            ];
+            //$articles = TableRegistry::get('Articles');
+            $article = $articles->newEntity($data, [
+                'associated' => ['Tags']
+            ]);
+            $articles->save($article);
+
+            //$article->tags->id = $id;            
             //$newData = ['user_id' => $this->Auth->user('id')];
             //$article = $this->Articles->patchEntity($article, $newData);
             if ($this->Articles->save($article)) {
@@ -85,30 +117,6 @@ class ArticlesController extends AppController
         $this->set('article', $article);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Article id.
-     * @return void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-   /* public function edit($id = null)
-    {
-        $article = $this->Articles->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $article = $this->Articles->patchEntity($article, $this->request->data);
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('The article has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The article could not be saved. Please, try again.'));
-            }
-        }
-        $this->set(compact('article'));
-        $this->set('_serialize', ['article']);
-    }*/
     public function edit($id = null)
         {
             $article = $this->Articles->get($id);
@@ -149,7 +157,6 @@ class ArticlesController extends AppController
         if ($this->request->action === 'add') {
             return true;
         }
-
         // The owner of an article can edit and delete it
         if (in_array($this->request->action, ['edit', 'delete'])) {
             $articleId = (int)$this->request->params['pass'][0];
@@ -157,7 +164,11 @@ class ArticlesController extends AppController
                 return true;
             }
         }
-
         return parent::isAuthorized($user);
     }
+    public function isOwnedBy($articleId, $userId)
+    {
+        return $this->exists(['id' => $articleId, 'user_id' => $userId]);
+    }
+
 }
