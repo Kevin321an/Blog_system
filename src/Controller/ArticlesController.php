@@ -20,14 +20,22 @@ class ArticlesController extends AppController
 
      public function viewByTag($tag = null ){
              
-        $this->set('tagName', $tag);
-        $this->set('_serialize', ['tagName']);  
+        if ($tag != null){
+            $this->set('tagName', $tag);
+            $this->set('_serialize', ['tagName']);  
 
-        $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
-        $query = $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags'])
-            -> where (['name' => $tag]);
-        $this->set('query', $query);
-        $this->set('_serialize', ['query']);     
+            $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
+            $query = $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags'])
+                -> where (['name' => $tag]);
+            $this->set('query', $query);
+            $this->set('_serialize', ['query']); 
+        }
+        else{
+            $this->Flash->error(__('Sorry we are unable to find this tag.'));
+
+        }
+
+           
     }
     /**
      * Index method
@@ -37,7 +45,7 @@ class ArticlesController extends AppController
    public function index()
     {
         $this->set('articles', $this->Articles->find('all')->contain(['Authors', 'Comments', 'Tags']));
-        
+             
     }
     /**
      * View method
@@ -76,6 +84,8 @@ class ArticlesController extends AppController
                 // ]);               
 
             }
+
+        
        
         $this->set(compact('article'));
     }

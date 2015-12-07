@@ -17,7 +17,7 @@
         <th>Authors</th>
         <th>Created</th>
         <th>Action</th>
-        <th>Tag</th>
+        
     </tr>
 
     <!-- Here is where we iterate through our $articles query object, printing out article info -->
@@ -44,12 +44,17 @@
                 ['confirm' => 'Are you sure?'])
             ?>
             <?= $this->Html->link('Edit', ['action' => 'edit', $article->id]) ?>
-        </td>
-        <td>
-            <?= $this->Html->link($article->tag->name, ['action' => 'viewByTag', $article->tag->name]) ?>          
-        </td>
+        </td>        
         
     </tr>
     <?php endforeach; ?>
 </table>
+<h1>Find articles by Tags</h1>
+<table>
+    <?php foreach ($articles as $tag): ?>
+    <tr> 
+        <td><?= $this->Html->link( $tag->tag->name, ['action' => 'viewByTag', $tag->tag->name]) ?></td>             
+    </tr>
+    <?php endforeach; ?>
+ </table>
 

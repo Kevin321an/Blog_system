@@ -7,6 +7,7 @@
     //array('controller' => 'Comments', 'action' => 'add' , $article->id))    
     ['action' => 'add', 'controller' => 'comments', $article->id]) 
 ?></p>
+
 <p><?= h($article->body) ?></p>
 <p><small>Created: <?= $article->created->format(DATE_RFC850) ?></small></p>
 <table>

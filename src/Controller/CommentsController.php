@@ -48,8 +48,7 @@ class CommentsController extends AppController
      */
     
     public function add($id = null)
-    {
-         
+    {         
         $articlesID = $id;        
         $this->set('art_id', $articlesID);
         $this->set('_serialize', ['art_id']);  
@@ -57,10 +56,15 @@ class CommentsController extends AppController
         $comment = $this->Comments->newEntity();
         if ($this->request->is('post')) {
             $comment = $this->Comments->patchEntity($comment, $this->request->data); 
-
-            //Here is a bug that the $id can not pass into  this curly brace          
-            $id = rand(1,10);            
-            $comment->article_id = $id;
+            //Here is a bug that the $id can not pass into  this curly brace  
+            if ($id !=null){
+                 $comment->article_id = $id;
+            }
+            else{
+                $comment->article_id = rand(1,10);
+                $this->Flash->error(__('We do not get your article id so we save it in elsewhere'));                  
+            }                   
+           
            /* $newData = ['article_id' => $id];
             $comment = $this->Articles->patchEntity($comment, $newData);*/
             $comment->approved = false;            
@@ -79,8 +83,6 @@ class CommentsController extends AppController
 
       public function approveComment($id = null)
     {
-
-
         $comment = $this->Comments->get($id, [
             'contain' => []
         ]);
@@ -91,15 +93,14 @@ class CommentsController extends AppController
         $this->Comments->save($comment);
       
                 $this->Flash->success(__('The comment has been approved.'));
-                return $this->redirect(['action' => 'index','controller' => 'Articles']);
-   
+                return $this->redirect(['action' => 'index','controller' => 'Articles']);  
     }
 
     public function dComment($id = null)
     {
         $comment = $this->Comments->get($id, [
             'contain' => []
-        ]);       
+        ]);      
         
         //$order = $this->Orders->get($id); 
         $comment->approved= 0;
@@ -107,10 +108,7 @@ class CommentsController extends AppController
       
                 $this->Flash->success(__('The comment has been disapproved.'));
                 return $this->redirect(['action' => 'index','controller' => 'Articles']);
-   
     }
-
-
     /**
      * Edit method
      *
@@ -155,7 +153,6 @@ class CommentsController extends AppController
         } else {    
             $this->Flash->error(__('The comment could not be deleted. Please, try again.'));
         }
-        return $this->redirect(['action' => 'index','controller' => 'articles']);
-        //'action' => 'delete', 'controller' => 'comments'
+        return $this->redirect(['action' => 'index','controller' => 'articles']);       
     }
 }
